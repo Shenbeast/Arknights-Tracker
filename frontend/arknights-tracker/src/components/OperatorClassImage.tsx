@@ -3,15 +3,16 @@ import { ClassNameMappings } from "../constants"
 
 interface OperatorClassImageProps {
   className: string
+  size?: string
+  borderRadius?: string
 }
 
-const OperatorClassImage = ({className} : OperatorClassImageProps) => {
+const OperatorClassImage = ({className, size, borderRadius} : OperatorClassImageProps) => {
   const baseUrl ="https://aceship.github.io/AN-EN-Tags/img/classes/black"
   const formattedClassName = ClassNameMappings[className]
   const srcUrl = `${baseUrl}/icon_profession_${formattedClassName.toLowerCase()}_large.png`
-  console.log(srcUrl)
   return (
-    <Image src={srcUrl} alt={className}/>
+    <Image borderRadius={borderRadius} boxSize={size} src={srcUrl} alt={className}/>
   )
 }
 

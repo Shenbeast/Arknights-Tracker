@@ -1,34 +1,29 @@
 import { Box } from "@chakra-ui/react"
 import { OperatorGridOperator } from "../types"
 import styled from "styled-components"
-import {RarityColors} from "../constants"
 import OperatorImage from "./OperatorImage"
-
+import { handleRarityBorderColor } from "../utils"
+const uncheckedOpacity = 0.3
 interface OperatorGridImageProps {
   operator: OperatorGridOperator
   selectedOperator: string
+  ownedOperators: OperatorGridOperator[]
 }
 
-const handleRarityBorderColor = (rarity : number) => {
-  return RarityColors[rarity]
-}
-
-const Wrapper = styled(Box)<{operator: OperatorGridOperator, selectedOperator: string, props: any}>`
-  opacity: ${props => props.operator.id === props.selectedOperator ? 0.2 : 1};
+const Wrapper = styled(Box)<{operator: OperatorGridOperator, $selectedOperator: string, $ownedOperators: OperatorGridOperator[]}>`
+  opacity: ${props =>  props.$ownedOperators.find((operator) => operator.id === props.operator.id) ? 1.0 : uncheckedOpacity}};
   &:hover {
-    opacity: 0.3;
+    opacity: 1.0;
   }
   img {
-    border-bottom-width: 6px;
-    border-bottom-style: solid;
-    border-bottom-color: ${props => handleRarityBorderColor(props.operator.rarity)};
+    border-bottom: 6px solid ${props => handleRarityBorderColor(props.operator.rarity - 1)}
   }
 `
 
-const OperatorGridImage = ({operator, selectedOperator} : OperatorGridImageProps) => {
+const OperatorGridImage = ({operator, selectedOperator, ownedOperators} : OperatorGridImageProps) => {
   return (
-    <Wrapper operator={operator} selectedOperator={selectedOperator}>
-      <OperatorImage id={operator.id} name={operator.name}/>
+    <Wrapper operator={operator} $selectedOperator={selectedOperator} $ownedOperators={ownedOperators}>
+      <OperatorImage size="90" id={operator.id} name={operator.name}/>
       <div>{operator.name}</div>
     </Wrapper>
   )

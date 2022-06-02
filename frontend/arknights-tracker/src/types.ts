@@ -13,6 +13,11 @@ export interface OperatorGridOperator {
   id: string;
   name: string;
   rarity: number;
+  class: string;
+}
+
+export interface OperatorFilter<T> {
+  [filterProperty: string] : T[]
 }
 
 export interface OperatorMeta {
