@@ -1,7 +1,7 @@
 import { Box } from "@chakra-ui/react"
 import {StarIcon} from "@chakra-ui/icons"
 import styled from "styled-components"
-import { handleRarityBorderColor } from "../utils";
+import { handleRarityBorderColor } from "../../utils";
 
 interface OperatorRarityCardProps {
   rarity : number;

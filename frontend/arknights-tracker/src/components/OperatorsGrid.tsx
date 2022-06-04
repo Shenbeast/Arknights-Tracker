@@ -2,11 +2,11 @@ import {char_meta }from "../assets/char_meta";
 import { char_data } from "../assets/char_data";
 import { useState, useEffect, useMemo } from "react";
 import { Box, Grid, GridItem, useDisclosure } from "@chakra-ui/react";
-import OperatorGridImage from "./OperatorGridImage";
+import OperatorGridImage from "./OperatorCollectionDisplay/OperatorGridImage";
 import { OperatorGridOperator, OperatorFilter } from "../types.js";
 import OperatorView from "./OperatorView";
-import OperatorClassImageSelector from "./OperatorClassImageSelector";
-import OperatorRaritySelector from "./OperatorRaritySelector";
+import OperatorClassImageSelector from "./OperatorCollectionDisplay/OperatorClassImageSelector";
+import OperatorRaritySelector from "./OperatorCollectionDisplay/OperatorRaritySelector";
 import { cleanAlterOperatorName } from "../utils";
 
 const OperatorsGrid = () => {
@@ -25,17 +25,41 @@ const OperatorsGrid = () => {
     for (const operator in char_meta) {
       char_meta[operator].forEach((operatorVersion) => {
         const operator = char_data[operatorVersion]
-        operatorsArray.push({id: operatorVersion, name: cleanAlterOperatorName(operator.name) , rarity: operator.rarity + 1, class: operator.profession})
+        operatorsArray.push({general: {owned: false, favourite: false}, id: operatorVersion, name: cleanAlterOperatorName(operator.name) , rarity: operator.rarity + 1, class: operator.profession, skills: operator.skills, potential: operator.potentialRanks, phases: operator.phases})
       })
     }
     setOperators(operatorsArray)
     setLoading(false)
   }, [])
+
   useEffect(() => {
     if (selectedOperator) {
       onOpen()
     }
   }, [onOpen, selectedOperator])
+
+  const toggleRarity = (rarity : number) => {
+    let newRarityFilter = {...rarityFilter}
+    let newRarityFilters = newRarityFilter.rarity
+    if (newRarityFilters.includes(rarity)) {
+      newRarityFilter.rarity = newRarityFilters.filter((item) => item!==rarity)
+    } else {
+      newRarityFilters.push(rarity)
+    }
+    setRarityFilter(newRarityFilter)
+  }
+
+  const toggleClass = (key : string): any => {
+    let newClassFilter = {...classFilter}
+    let newClassFilters = newClassFilter.class
+    if (newClassFilters.includes(key)) {
+      console.log("reached")
+      newClassFilter.class = newClassFilters.filter((item) => item!==key)
+    } else {
+      newClassFilters.push(key)
+    }
+    setClassFilter(newClassFilter)
+  }
 
   useMemo(() => {
     const filters = [classFilter, rarityFilter]
@@ -45,7 +69,7 @@ const OperatorsGrid = () => {
         const key = Object.keys(filter)[0]
         const operatorFilters : (string | number)[] = filter[key]
         const operatorValue = operator[key as keyof OperatorGridOperator]
-        if (operatorFilters.length > 0) {
+        if (operatorFilters.length > 0 && (typeof(operatorValue) === "string" || typeof(operatorValue) === "number")){
           return operatorFilters.includes(operatorValue)
         } else {
           return true
@@ -61,9 +85,9 @@ const OperatorsGrid = () => {
     !loading ?
     <div>
       <Box mb="10">
-        <OperatorClassImageSelector  classFilter={classFilter} setClassFilter={setClassFilter}/>
+        <OperatorClassImageSelector  classFilter={classFilter} toggleClass={toggleClass}/>
         <br/>
-        <OperatorRaritySelector rarityFilter={rarityFilter} setRarityFilter={setRarityFilter}/>
+        <OperatorRaritySelector rarityFilter={rarityFilter} toggleRarity={toggleRarity}/>
       </Box>
       <Grid templateColumns="repeat(auto-fit, 90px)" gap={1} ml={8} p={15}>
         <OperatorView operators={operators} operator={selectedOperator} isOpen={isOpen} onClose={onClose} setSelectedOperator={setSelectedOperator} ownedOperators={ownedOperators} setOwnedOperators={setOwnedOperators}/>

@@ -1,8 +1,8 @@
 import { Box, Flex } from "@chakra-ui/react";
-import { OperatorFilter } from "../types";
+import { OperatorFilter } from "../../types";
 import OperatorRarityCard from "./OperatorRarityCard";
 import styled from "styled-components"
-import { SelectedFilterColor } from "../constants";
+import { SelectedFilterColor } from "../../constants";
 
 const borderRadius = "15%"
 const Wrapper = styled(Box)`
@@ -17,24 +17,20 @@ const Wrapper = styled(Box)`
 `
 interface OperatorRaritySelectorProps {
   rarityFilter: OperatorFilter<number>
-  setRarityFilter: React.Dispatch<React.SetStateAction<OperatorFilter<number>>>;
+  toggleRarity: (rarity : number) => void;
 }
 
-const OperatorRaritySelector = ({rarityFilter, setRarityFilter}: OperatorRaritySelectorProps) => {
+const OperatorRaritySelector = ({rarityFilter, toggleRarity}: OperatorRaritySelectorProps) => {
   const rarities = [1, 2, 3, 4, 5, 6]
-  const toggleRarity = (rarity : number) => {
-    let newRarityFilter = {...rarityFilter}
-    let newRarityFilters = newRarityFilter.rarity
-    if (newRarityFilters.includes(rarity)) {
-      newRarityFilter.rarity = newRarityFilters.filter((item) => item!==rarity)
-    } else {
-      newRarityFilters.push(rarity)
+  const handleEnter = (event: any, key : number) : any => {
+    if (event.charCode === 13) {
+      toggleRarity(key)
     }
-    setRarityFilter(newRarityFilter)
   }
+
   return (
     <Flex justifyContent={"space-evenly"}>
-      {rarities.map((rarity) => <Wrapper p="5" onClick={() => toggleRarity(rarity)} $toggled={rarityFilter.rarity.includes(rarity)}><OperatorRarityCard rarity={rarity}/></Wrapper>)}
+      {rarities.map((rarity) => <Wrapper tabIndex="0" onKeyPress={(e : any) => handleEnter(e, rarity)} p="5" onClick={() => toggleRarity(rarity)} $toggled={rarityFilter.rarity.includes(rarity)}><OperatorRarityCard rarity={rarity}/></Wrapper>)}
     </Flex>
   )
 }

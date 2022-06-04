@@ -4,16 +4,25 @@ export type NullableStringArray = string[] | null
 export type RarityColor = [number, string]
 
 export interface GrowthMaterial {
-  id: string,
-  count: number,
-  type: string,
+  id: string;
+  count: number;
+  type: string;
+}
+
+export interface UserOperatorGeneral {
+  owned: boolean;
+  favourite: boolean;
 }
 
 export interface OperatorGridOperator {
+  general: UserOperatorGeneral
   id: string;
   name: string;
   rarity: number;
   class: string;
+  skills: OperatorSkill[];
+  potential: OperatorPotential[]
+  phases: OperatorPhase[]
 }
 
 export interface OperatorFilter<T> {
