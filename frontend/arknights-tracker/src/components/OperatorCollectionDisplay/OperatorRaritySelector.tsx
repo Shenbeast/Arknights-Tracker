@@ -39,6 +39,7 @@ const OperatorRaritySelector = ({
     <Flex justifyContent={"space-evenly"}>
       {rarities.map((rarity) => (
         <Wrapper
+          key={rarity}
           tabIndex="0"
           onKeyPress={(e: any) => handleEnter(e, rarity)}
           p="5"

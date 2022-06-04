@@ -7,16 +7,16 @@ const uncheckedOpacity = 0.3;
 interface OperatorGridImageProps {
   operator: OperatorGridOperator;
   selectedOperator: string;
-  ownedOperators: OperatorGridOperator[];
+  operators: OperatorGridOperator[];
 }
 
 const Wrapper = styled(Box)<{
   operator: OperatorGridOperator;
   $selectedOperator: string;
-  $ownedOperators: OperatorGridOperator[];
+  $operators: OperatorGridOperator[];
 }>`
   opacity: ${(props) =>
-    props.$ownedOperators.find((operator) => operator.id === props.operator.id)
+    props.$operators.find((operator) => operator.id === props.operator.id)?.general.owned
       ? 1.0
       : uncheckedOpacity}};
   &:hover {
@@ -31,13 +31,13 @@ const Wrapper = styled(Box)<{
 const OperatorGridImage = ({
   operator,
   selectedOperator,
-  ownedOperators,
+  operators,
 }: OperatorGridImageProps) => {
   return (
     <Wrapper
       operator={operator}
       $selectedOperator={selectedOperator}
-      $ownedOperators={ownedOperators}
+      $operators={operators}
     >
       <OperatorImage size="90" id={operator.id} name={operator.name} />
       <div>{operator.name}</div>

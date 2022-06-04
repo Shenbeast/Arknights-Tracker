@@ -20,22 +20,20 @@ import OperatorPotentialSelector from "./OperatorCollectionDisplay/OperatorPoten
 
 interface OperatorViewProps {
   operator: string;
-  ownedOperators: OperatorGridOperator[];
-  addOperator: (operatorData : OperatorFullDetails) => void;
+  operators: OperatorGridOperator[];
   isOpen: boolean;
-  handleOperatorViewClose: () => void,
+  handleOperatorViewClose: () => void;
+  handleOwn: (operatorData : OperatorFullDetails) => void;
 }
 const OperatorView = ({
   operator,
-  ownedOperators,
-  addOperator,
+  operators,
   isOpen,
   handleOperatorViewClose,
+  handleOwn,
 }: OperatorViewProps) => {
-  console.log(ownedOperators)
+  console.log(operators)
   const operatorData : OperatorFullDetails = char_data[operator];
-  console.log(operatorData?.phases.length);
-
 
   return (
     <Modal isOpen={isOpen} onClose={handleOperatorViewClose}>
@@ -70,7 +68,7 @@ const OperatorView = ({
               </Box>
             </HStack>
           </Flex>
-          <Button mt="60px" onClick={() => addOperator(operatorData)}>
+          <Button mt="60px" onClick={() => handleOwn(operatorData)}>
             Add Operator
           </Button>
         </ModalBody>

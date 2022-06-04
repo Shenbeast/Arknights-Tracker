@@ -22,7 +22,7 @@ const OperatorPotentialSelector = ({
   return (
     <HStack>
       {operatorPotentialRanks.map((rank) => (
-        <Wrapper>
+        <Wrapper key={rank}>
           <OperatorPotentialImage
             size="50px"
             potential={(Number(rank) + 1).toString()}
