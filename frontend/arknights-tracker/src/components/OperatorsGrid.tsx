@@ -3,7 +3,7 @@ import { char_data } from "../assets/char_data";
 import { useState, useEffect, useReducer, useMemo } from "react";
 import { Box, Grid, GridItem, useDisclosure } from "@chakra-ui/react";
 import OperatorGridImage from "./OperatorCollectionDisplay/OperatorGridImage";
-import { OperatorGridOperator, OperatorFilter, OperatorFullDetails } from "../types.js";
+import { OperatorGridOperator, OperatorFilter, OperatorFullDetails, OperatorAction } from "../types.js";
 import OperatorView from "./OperatorView";
 import OperatorClassImageSelector from "./OperatorCollectionDisplay/OperatorClassImageSelector";
 import OperatorRaritySelector from "./OperatorCollectionDisplay/OperatorRaritySelector";
@@ -25,56 +25,98 @@ const OperatorsGrid = () => {
 
   enum OwnedOperatorActionKind {
     OWN = "OWN",
+    FAVOURITE = "FAVOURITE",
+    POTENTIAL = "POTENTIAL",
+    ELITE_PHASE = "ELITE_PHASE",
     RESET = "RESET",
     INIT = "INIT"
   }
   interface OwnedOperatorAction {
     type: OwnedOperatorActionKind;
     operatorData?: OperatorFullDetails;
+    potential?: number
+    elitePhase?: number
   }
 
   const getOperator = (newState: OperatorGridOperator[], operatorData: OperatorFullDetails) => {
     return newState.find(
-      (ownedOperator) => ownedOperator.name === operatorData.name
+      (ownedOperator) => ownedOperator.id === operatorData.id
     )
   }
+
+  const initialUserOperatorState = {owned: false, favourite: false, potential: 1, elitePhase: 0, level: 0}
 
   const operatorsReducer = (state: OperatorGridOperator[], action : OwnedOperatorAction) => {
     const newState = [...state]
     switch(action.type) {
       case OwnedOperatorActionKind.INIT: 
-      const operatorsArray : OperatorGridOperator[] = []
-      for (const operator in char_meta) {
-        char_meta[operator].forEach((operatorVersion) => {
-          const operator = char_data[operatorVersion];
-          operatorsArray.push({
-            general: { owned: false, favourite: false },
-            id: operatorVersion,
-            name: cleanAlterOperatorName(operator.name),
-            rarity: operator.rarity + 1,
-            class: operator.profession,
-            skills: operator.skills,
-            potential: operator.potentialRanks,
-            phases: operator.phases,
+        const operatorsArray : OperatorGridOperator[] = []
+        for (const operator in char_meta) {
+          char_meta[operator].forEach((operatorVersion) => {
+            const operator = char_data[operatorVersion];
+            operatorsArray.push({
+              user: {owned: false, favourite: false, potential: 1, elitePhase: 0, level: 0},
+              id: operatorVersion,
+              name: cleanAlterOperatorName(operator.name),
+              rarity: operator.rarity + 1,
+              class: operator.profession,
+              skills: operator.skills,
+              potential: operator.potentialRanks,
+              phases: operator.phases,
+            });
           });
-        });
-      }
-      return operatorsArray;
+        }
+        console.log("initialised")
+        return operatorsArray;
       case OwnedOperatorActionKind.OWN:
-        console.log("called")
         if (action.operatorData) {
-          const selectedOperator = newState.find(
-            (ownedOperator) => ownedOperator.name === action.operatorData?.name
-          )
+          const selectedOperator = getOperator(newState, action.operatorData)
           if (selectedOperator) {
-            console.log("b4", selectedOperator.general.owned)
-            selectedOperator.general.owned = !selectedOperator.general.owned
-            console.log("after", selectedOperator.general.owned)
+            if (!selectedOperator.user.owned) {
+              selectedOperator.user = initialUserOperatorState
+              selectedOperator.user.owned = true
+            } else {
+              selectedOperator.user = initialUserOperatorState
+            }
           }
         }
-        console.log(newState)
+        return newState
+      case OwnedOperatorActionKind.FAVOURITE:
+        if (action.operatorData) {
+          const selectedOperator = getOperator(newState, action.operatorData)
+          if (selectedOperator) {
+            if (!selectedOperator.user.owned  && !selectedOperator.user.favourite)  {
+              selectedOperator.user.owned = true
+              selectedOperator.user.favourite = true
+            } else {
+              selectedOperator.user.favourite = !selectedOperator.user.favourite
+            }
+          }
+        }
+        return newState
+      case OwnedOperatorActionKind.POTENTIAL:
+        if (action.operatorData && action.potential) {
+          const selectedOperator = getOperator(newState, action.operatorData)
+          if (selectedOperator) {
+            selectedOperator.user.potential = action.potential
+          }
+        }
+        return newState
+      case OwnedOperatorActionKind.ELITE_PHASE:
+        if (action.operatorData && typeof(action.elitePhase) === "number") {
+          const selectedOperator = getOperator(newState, action.operatorData)
+          if (selectedOperator) {
+            selectedOperator.user.elitePhase = action.elitePhase
+          }
+        }
         return newState
       case OwnedOperatorActionKind.RESET:
+        if (action.operatorData) {
+          const selectedOperator = getOperator(newState, action.operatorData)
+          if (selectedOperator) {
+            selectedOperator.user = initialUserOperatorState
+          }
+        }
         return newState
       default:
         throw new Error()
@@ -82,10 +124,28 @@ const OperatorsGrid = () => {
   }
   const initialOwnedOperatorsState : OperatorGridOperator[] = []
   const [operators, dispatch] = useReducer(operatorsReducer, initialOwnedOperatorsState)
-  
+  console.log("operators", operators)
   const handleOwn = (operatorData: OperatorFullDetails) => {
     dispatch({ type: OwnedOperatorActionKind.OWN, operatorData})
   }
+
+  const handleFavourite = (operatorData: OperatorFullDetails) => {
+    dispatch({ type: OwnedOperatorActionKind.FAVOURITE, operatorData})
+  }
+
+  const handlePotential = (operatorData: OperatorFullDetails, potential: number) => {
+    dispatch({ type: OwnedOperatorActionKind.POTENTIAL, operatorData, potential})
+  }
+
+  const handleReset = (operatorData: OperatorFullDetails) => {
+    dispatch({ type: OwnedOperatorActionKind.RESET, operatorData})
+  }
+
+  const handleElitePhase = (operatorData: OperatorFullDetails, elitePhase: number) => {
+    dispatch({ type: OwnedOperatorActionKind.ELITE_PHASE, operatorData, elitePhase})
+  }
+
+  const handleOperatorActions : OperatorAction= {handleOwn, handleFavourite, handlePotential, handleReset, handleElitePhase}
 
   useEffect(() => {
     dispatch({ type: OwnedOperatorActionKind.INIT})
@@ -120,7 +180,6 @@ const OperatorsGrid = () => {
     let newClassFilter = { ...classFilter };
     let newClassFilters = newClassFilter.class;
     if (newClassFilters.includes(key)) {
-      console.log("reached");
       newClassFilter.class = newClassFilters.filter((item) => item !== key);
     } else {
       newClassFilters.push(key);
@@ -168,11 +227,11 @@ const OperatorsGrid = () => {
       </Box>
       <Grid templateColumns="repeat(auto-fit, 90px)" gap={1} ml={8} p={15}>
         <OperatorView
-          operator={selectedOperator}
+          operatorId={selectedOperator}
           operators={operators}
           isOpen={isOpen} 
           handleOperatorViewClose={handleOperatorViewClose}
-          handleOwn={handleOwn}
+          handleOperatorActions={handleOperatorActions}
         />
         {displayedOperators.map((operator) => (
           <GridItem

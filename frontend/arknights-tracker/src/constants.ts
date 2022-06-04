@@ -12,6 +12,10 @@ export const RarityColors : string[] = [
 ]
 
 export const SelectedFilterColor = "hsl(43, 87%, 76%)"
+export const unselectedButtonColor = "hsl(60, 1%, 33%)"
+export const selectedButtonColor = "hsl(43, 87%, 76%)"
+export const hoveredButtonColor = "hsl(218, 12%, 35%)"
+export const unselectedButtonBackgroundColor = "hsl(216, 17%, 29%)"
 
 export const ClassNameMappings:  ClassNameMapping = {
   "WARRIOR": "Guard",
@@ -23,6 +27,8 @@ export const ClassNameMappings:  ClassNameMapping = {
   "SPECIAL": "Specialist",
   "PIONEER": "Vanguard",
 }
+
+export const ElitePhases : number[] = [0, 1, 2]
 
 // export const OwnedSixStars: OperatorGridOperator[] = [
 //   {

@@ -1,11 +1,22 @@
-import { Button, HStack, IconButton } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
+import BasicButton from "./BasicButton";
 import { FaHeart } from "react-icons/fa";
+import { OperatorAction, OperatorFullDetails, OperatorGridOperator } from "../../types";
+import { selectedButtonColor, unselectedButtonColor } from "../../constants";
 
-const OperatorGeneralSelector = () => {
+interface OperatorGeneralSelectorProps {
+  handleOperatorActions: OperatorAction;
+  operatorData: OperatorFullDetails;
+  currentOperator: OperatorGridOperator | undefined
+}
+const OperatorGeneralSelector = ({currentOperator, handleOperatorActions, operatorData} : OperatorGeneralSelectorProps) => {
+  console.log("current operator", currentOperator)
+  const determineOwnButtonBorder = currentOperator?.user.owned ? `1.3px solid ${selectedButtonColor}` : `1.3px solid ${unselectedButtonColor}}`
+  const determineFavouriteButtonBorder = currentOperator?.user.favourite ? `1.3px solid ${selectedButtonColor}` : `1.3px solid ${unselectedButtonColor}`
   return (
     <HStack>
-      <Button>Own</Button>
-      <IconButton aria-label="Favourite" icon={<FaHeart color={"red"} />} />
+      <BasicButton border={determineOwnButtonBorder} height="40px" width="60px" onClick={() => handleOperatorActions.handleOwn(operatorData)}>Own</BasicButton>
+      <BasicButton border={determineFavouriteButtonBorder} height="40px" width="60px" onClick={() => handleOperatorActions.handleFavourite(operatorData)} aria-label="Favourite"><FaHeart color={currentOperator?.user.favourite ? "red" : "white"}/></BasicButton>
     </HStack>
   );
 };

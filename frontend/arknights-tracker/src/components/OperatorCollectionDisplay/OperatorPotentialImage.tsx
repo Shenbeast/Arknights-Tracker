@@ -1,7 +1,7 @@
 import { Image } from "@chakra-ui/react";
 
 interface OperatorPotentialImageProps {
-  potential: string;
+  potential: number;
   size?: string;
   borderRadius?: string;
 }
@@ -18,7 +18,7 @@ const OperatorPotentialImage = ({
       borderRadius={borderRadius}
       boxSize={size}
       src={srcUrl}
-      alt={potential}
+      alt={potential.toString()}
     />
   );
 };

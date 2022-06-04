@@ -2,20 +2,31 @@ export type NullableString = string | null
 export type NullableStringArray = string[] | null
 
 export type RarityColor = [number, string]
+export type OperatorActionInnerOneParam = {(data : any) : void;}
+export type OperatorActionInnerTwoParam = {(data : any, data1: any) : void;}
+export interface OperatorAction {
+  handleOwn : OperatorActionInnerOneParam;
+  handleFavourite: OperatorActionInnerOneParam;
+  handlePotential: OperatorActionInnerTwoParam;
+  handleReset: OperatorActionInnerOneParam;
+  handleElitePhase: OperatorActionInnerTwoParam;
+}
 
 export interface GrowthMaterial {
   id: string;
   count: number;
   type: string;
 }
-
 export interface UserOperatorGeneral {
   owned: boolean;
   favourite: boolean;
+  potential: number;
+  elitePhase: number;
+  level: number;
 }
 
 export interface OperatorGridOperator {
-  general: UserOperatorGeneral
+  user: UserOperatorGeneral
   id: string;
   name: string;
   rarity: number;
@@ -43,6 +54,7 @@ export interface OperatorFullDetailsList {
 }
 
 export interface OperatorFullDetails {
+  id?: string,
   name: string,
   description: NullableString,
   canUseGeneralPotentialItem: boolean,

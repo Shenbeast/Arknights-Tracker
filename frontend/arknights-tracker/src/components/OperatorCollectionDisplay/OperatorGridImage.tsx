@@ -12,11 +12,9 @@ interface OperatorGridImageProps {
 
 const Wrapper = styled(Box)<{
   operator: OperatorGridOperator;
-  $selectedOperator: string;
-  $operators: OperatorGridOperator[];
 }>`
   opacity: ${(props) =>
-    props.$operators.find((operator) => operator.id === props.operator.id)?.general.owned
+    props.$operator.user.owned
       ? 1.0
       : uncheckedOpacity}};
   &:hover {
@@ -24,20 +22,16 @@ const Wrapper = styled(Box)<{
   }
   img {
     border-bottom: 6px solid ${(props) =>
-      handleRarityBorderColor(props.operator.rarity - 1)}
+      handleRarityBorderColor(props.$operator.rarity - 1)}
   }
 `;
 
 const OperatorGridImage = ({
   operator,
-  selectedOperator,
-  operators,
 }: OperatorGridImageProps) => {
   return (
     <Wrapper
-      operator={operator}
-      $selectedOperator={selectedOperator}
-      $operators={operators}
+      $operator={operator}
     >
       <OperatorImage size="90" id={operator.id} name={operator.name} />
       <div>{operator.name}</div>

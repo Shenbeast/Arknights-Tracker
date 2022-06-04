@@ -11,30 +11,35 @@ import {
   Flex,
   Text,
   HStack,
+  VStack,
 } from "@chakra-ui/react";
 import { char_data } from "../assets/char_data";
-import { OperatorFullDetails, OperatorGridOperator } from "../types";
+import { OperatorAction, OperatorFullDetails, OperatorGridOperator } from "../types";
+import OperatorElitePhaseSelector from "./OperatorCollectionDisplay/OperatorElitePhaseSelector";
 import OperatorGeneralSelector from "./OperatorCollectionDisplay/OperatorGeneralSelector";
 import OperatorImage from "./OperatorCollectionDisplay/OperatorImage";
 import OperatorPotentialSelector from "./OperatorCollectionDisplay/OperatorPotentialSelector";
 
 interface OperatorViewProps {
-  operator: string;
+  operatorId: string;
   operators: OperatorGridOperator[];
   isOpen: boolean;
   handleOperatorViewClose: () => void;
-  handleOwn: (operatorData : OperatorFullDetails) => void;
+  handleOperatorActions: OperatorAction;
 }
 const OperatorView = ({
-  operator,
+  operatorId,
   operators,
   isOpen,
   handleOperatorViewClose,
-  handleOwn,
+  handleOperatorActions,
 }: OperatorViewProps) => {
-  console.log(operators)
-  const operatorData : OperatorFullDetails = char_data[operator];
-
+  const operatorData : OperatorFullDetails = char_data[operatorId];
+  if (operatorData) {
+    operatorData.id = operatorId
+  }
+  const currentOperator = operators.find((operator) => operator.id === operatorId)
+  console.log("available handlers", handleOperatorActions)
   return (
     <Modal isOpen={isOpen} onClose={handleOperatorViewClose}>
       <ModalOverlay />
@@ -43,7 +48,7 @@ const OperatorView = ({
           <Flex alignItems="center">
             <OperatorImage
               size="80px"
-              id={operator}
+              id={operatorId}
               name={operatorData?.name}
             />
             <Text
@@ -57,19 +62,29 @@ const OperatorView = ({
         <ModalCloseButton />
         <ModalBody>
           <Flex className="ownedOperatorDetails">
+            <VStack>
             <HStack spacing="24px">
               <Box className="general">
-                <OperatorGeneralSelector />
+                <OperatorGeneralSelector currentOperator = {currentOperator} operatorData = {operatorData} handleOperatorActions={handleOperatorActions}/>
               </Box>
               <Box className="potential">
                 <OperatorPotentialSelector
+                  currentOperator = {currentOperator}
                   potentials={operatorData?.potentialRanks}
+                  operatorData = {operatorData}
+                  handleOperatorActions={handleOperatorActions}
                 />
               </Box>
             </HStack>
+            <HStack spacing="24px">
+              <Box className="elitePhase">
+                <OperatorElitePhaseSelector currentOperator = {currentOperator} operatorData = {operatorData} handleOperatorActions={handleOperatorActions}/>
+              </Box>
+            </HStack>
+            </VStack>
           </Flex>
-          <Button mt="60px" onClick={() => handleOwn(operatorData)}>
-            Add Operator
+          <Button mt="60px" onClick={() => handleOperatorActions.handleReset(operatorData)}>
+            Reset Operator
           </Button>
         </ModalBody>
         <ModalFooter></ModalFooter>
