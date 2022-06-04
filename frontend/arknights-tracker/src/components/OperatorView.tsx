@@ -13,60 +13,32 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { char_data } from "../assets/char_data";
-import { OperatorGridOperator } from "../types";
+import { OperatorFullDetails, OperatorGridOperator } from "../types";
 import OperatorGeneralSelector from "./OperatorCollectionDisplay/OperatorGeneralSelector";
 import OperatorImage from "./OperatorCollectionDisplay/OperatorImage";
 import OperatorPotentialSelector from "./OperatorCollectionDisplay/OperatorPotentialSelector";
 
 interface OperatorViewProps {
-  isOpen: boolean;
-  onClose: () => void;
   operator: string;
-  operators: OperatorGridOperator[];
-  setSelectedOperator: React.Dispatch<React.SetStateAction<string>>;
-  setOwnedOperators: React.Dispatch<
-    React.SetStateAction<OperatorGridOperator[]>
-  >;
   ownedOperators: OperatorGridOperator[];
+  addOperator: (operatorData : OperatorFullDetails) => void;
+  isOpen: boolean;
+  handleOperatorViewClose: () => void,
 }
 const OperatorView = ({
-  operators,
   operator,
-  isOpen,
-  onClose,
-  setSelectedOperator,
-  setOwnedOperators,
   ownedOperators,
+  addOperator,
+  isOpen,
+  handleOperatorViewClose,
 }: OperatorViewProps) => {
-  const operatorData = char_data[operator];
+  console.log(ownedOperators)
+  const operatorData : OperatorFullDetails = char_data[operator];
   console.log(operatorData?.phases.length);
-  const handleClose = () => {
-    onClose();
-    setSelectedOperator("");
-  };
-  const addOperator = () => {
-    let newOwnedOperators = [...ownedOperators];
-    if (
-      newOwnedOperators.find(
-        (ownedOperator) => ownedOperator.name === operatorData.name
-      )
-    ) {
-      newOwnedOperators = newOwnedOperators.filter(
-        (operator) => operator.name !== operatorData.name
-      );
-    } else {
-      const newOperator = operators.find(
-        (operator) => operator.name === operatorData.name
-      );
-      console.log(newOperator);
-      if (newOperator) {
-        newOwnedOperators.push(newOperator);
-      }
-    }
-    setOwnedOperators(newOwnedOperators);
-  };
+
+
   return (
-    <Modal isOpen={isOpen} onClose={handleClose}>
+    <Modal isOpen={isOpen} onClose={handleOperatorViewClose}>
       <ModalOverlay />
       <ModalContent mt={[0, 350]} maxW="460px">
         <ModalHeader>
@@ -98,7 +70,7 @@ const OperatorView = ({
               </Box>
             </HStack>
           </Flex>
-          <Button mt="60px" onClick={addOperator}>
+          <Button mt="60px" onClick={() => addOperator(operatorData)}>
             Add Operator
           </Button>
         </ModalBody>
