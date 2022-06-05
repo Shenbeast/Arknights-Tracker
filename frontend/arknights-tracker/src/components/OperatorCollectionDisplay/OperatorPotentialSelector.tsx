@@ -25,7 +25,6 @@ const OperatorPotentialSelector = ({
       return `1.3px solid ${unselectedButtonColor}}`
     }
   }
-  console.log(currentOperator?.potential)
   const determinePotentialButtonOpacity = (rank : number) => {
     if (currentOperator?.user.potential === rank + 1 && currentOperator?.user.owned) {
       return 1.0
