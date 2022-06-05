@@ -3,6 +3,7 @@ import { OperatorGridOperator } from "../../types";
 import styled from "styled-components";
 import OperatorImage from "./OperatorImage";
 import { handleRarityBorderColor } from "../../utils";
+import { FaHeart } from "react-icons/fa";
 const uncheckedOpacity = 0.3;
 interface OperatorGridImageProps {
   operator: OperatorGridOperator;
@@ -34,7 +35,8 @@ const OperatorGridImage = ({
       $operator={operator}
     >
       <OperatorImage size="90" id={operator.id} name={operator.name} />
-      <div>{operator.name}</div>
+      {operator.user.favourite && <FaHeart color="red" style={{marginTop: "-80px"}}/>}
+      <div style={{marginTop: operator.user.favourite ? "60px" : "0px"}}>{operator.name}</div>
     </Wrapper>
   );
 };

@@ -1,4 +1,4 @@
-import { Box, HStack } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import BasicButton from "./BasicButton";
 import { FaHeart } from "react-icons/fa";
 import { OperatorAction, OperatorFullDetails, OperatorGridOperator } from "../../types";

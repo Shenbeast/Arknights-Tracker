@@ -1,14 +1,31 @@
 import { char_meta } from "../assets/char_meta";
 import { char_data } from "../assets/char_data";
 import { useState, useEffect, useReducer, useMemo } from "react";
-import { Box, Grid, GridItem, useDisclosure, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Center,
+  Checkbox,
+  Grid,
+  GridItem,
+  Input,
+  useDisclosure,
+  VStack,
+} from "@chakra-ui/react";
 import OperatorGridImage from "./images/OperatorGridImage";
-import { OperatorGridOperator, OperatorFilter, OperatorFullDetails, OperatorAction, UserOperatorGeneral, UserOperatorSkills } from "../types.js";
+import {
+  OperatorGridOperator,
+  OperatorFilter,
+  OperatorFullDetails,
+  OperatorAction,
+  UserOperatorGeneral,
+  UserOperatorSkills,
+} from "../types.js";
 import OperatorView from "./OperatorView";
 import OperatorClassImageSelector from "./OperatorCollectionDisplay/OperatorClassImageSelector";
 import OperatorRaritySelector from "./OperatorCollectionDisplay/OperatorRaritySelector";
 import { cleanAlterOperatorName } from "../utils";
 import useLocalStorage from "../hooks/useLocalStorage";
+import { selectedButtonColor } from "../constants";
 
 const OperatorsGrid = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -23,7 +40,15 @@ const OperatorsGrid = () => {
   const [rarityFilter, setRarityFilter] = useState<OperatorFilter<number>>({
     rarity: [],
   });
-  const [existingOwnedOperators, setExistingOwnedOperators] = useLocalStorage("ownedOperators", [])
+  const [searchTerm, setSearchTerm] = useState("");
+  const [ownedFilter, setOwnedFilter] = useState(false);
+  const [favouriteFilter, setFavouriteFilter] = useState(false)
+
+  const handleSearchChange = (event: any) => setSearchTerm(event.target.value);
+  const [existingOwnedOperators, setExistingOwnedOperators] = useLocalStorage(
+    "ownedOperators",
+    []
+  );
 
   enum OwnedOperatorActionKind {
     OWN = "OWN",
@@ -39,34 +64,57 @@ const OperatorsGrid = () => {
   interface OwnedOperatorAction {
     type: OwnedOperatorActionKind;
     operatorData?: OperatorFullDetails;
-    potential?: number
-    elitePhase?: number
-    level?: number
-    module?: string
-    skill?: string
-    mastery?: number
+    potential?: number;
+    elitePhase?: number;
+    level?: number;
+    module?: string;
+    skill?: string;
+    mastery?: number;
   }
 
-  const getOperator = (newState: OperatorGridOperator[], operatorData: OperatorFullDetails) => {
+  const getOperator = (
+    newState: OperatorGridOperator[],
+    operatorData: OperatorFullDetails
+  ) => {
     return newState.find(
       (ownedOperator) => ownedOperator.id === operatorData.id
-    )
-  }
+    );
+  };
 
-  const initialUserOperatorState : UserOperatorGeneral = {owned: false, favourite: false, potential: 1, elitePhase: 0, level: 1, module: "", skills: {s1: null, s2: null, s3: null}}
+  const initialUserOperatorState: UserOperatorGeneral = {
+    owned: false,
+    favourite: false,
+    potential: 1,
+    elitePhase: 0,
+    level: 1,
+    module: "",
+    skills: { s1: null, s2: null, s3: null },
+  };
 
-  const operatorsReducer = (state: OperatorGridOperator[], action : OwnedOperatorAction) => {
-    const newState = [...state]
-    switch(action.type) {
-      case OwnedOperatorActionKind.INIT: 
-      console.log("existing user operators", existingOwnedOperators)
-        const operatorsArray : OperatorGridOperator[] = existingOwnedOperators.length > 0 ? existingOwnedOperators : []
+  const operatorsReducer = (
+    state: OperatorGridOperator[],
+    action: OwnedOperatorAction
+  ) => {
+    const newState = [...state];
+    switch (action.type) {
+      case OwnedOperatorActionKind.INIT:
+        //console.log("existing user operators", existingOwnedOperators);
+        const operatorsArray: OperatorGridOperator[] =
+          existingOwnedOperators.length > 0 ? existingOwnedOperators : [];
         if (existingOwnedOperators.length === 0) {
           for (const operator in char_meta) {
             char_meta[operator].forEach((operatorVersion) => {
               const operator = char_data[operatorVersion];
               operatorsArray.push({
-                user: {owned: false, favourite: false, potential: 1, elitePhase: 0, level: 1, module: "", skills: {s1: null, s2: null, s3: null}},
+                user: {
+                  owned: false,
+                  favourite: false,
+                  potential: 1,
+                  elitePhase: 0,
+                  level: 1,
+                  module: "",
+                  skills: { s1: null, s2: null, s3: null },
+                },
                 id: operatorVersion,
                 name: cleanAlterOperatorName(operator.name),
                 rarity: operator.rarity + 1,
@@ -78,133 +126,180 @@ const OperatorsGrid = () => {
             });
           }
         }
-        console.log("initialised")
+        //console.log("initialised");
         return operatorsArray;
       case OwnedOperatorActionKind.OWN:
         if (action.operatorData) {
-          const selectedOperator = getOperator(newState, action.operatorData)
+          const selectedOperator = getOperator(newState, action.operatorData);
           if (selectedOperator) {
             if (!selectedOperator.user.owned) {
-              selectedOperator.user = initialUserOperatorState
-              selectedOperator.user.owned = true
+              selectedOperator.user = initialUserOperatorState;
+              selectedOperator.user.owned = true;
             } else {
-              selectedOperator.user = initialUserOperatorState
+              selectedOperator.user = initialUserOperatorState;
             }
           }
         }
-        return newState
+        return newState;
       case OwnedOperatorActionKind.FAVOURITE:
         if (action.operatorData) {
-          const selectedOperator = getOperator(newState, action.operatorData)
+          const selectedOperator = getOperator(newState, action.operatorData);
           if (selectedOperator) {
-            if (!selectedOperator.user.owned  && !selectedOperator.user.favourite)  {
-              selectedOperator.user.owned = true
-              selectedOperator.user.favourite = true
+            if (
+              !selectedOperator.user.owned &&
+              !selectedOperator.user.favourite
+            ) {
+              selectedOperator.user.owned = true;
+              selectedOperator.user.favourite = true;
             } else {
-              selectedOperator.user.favourite = !selectedOperator.user.favourite
+              selectedOperator.user.favourite =
+                !selectedOperator.user.favourite;
             }
           }
         }
-        return newState
+        return newState;
       case OwnedOperatorActionKind.POTENTIAL:
-        if (action.operatorData && typeof(action.potential) === "number") {
-          const selectedOperator = getOperator(newState, action.operatorData)
+        if (action.operatorData && typeof action.potential === "number") {
+          const selectedOperator = getOperator(newState, action.operatorData);
           if (selectedOperator) {
-            selectedOperator.user.potential = action.potential
+            selectedOperator.user.potential = action.potential;
           }
         }
-        return newState
+        return newState;
       case OwnedOperatorActionKind.ELITE_PHASE:
-        if (action.operatorData && typeof(action.elitePhase) === "number") {
-          const selectedOperator = getOperator(newState, action.operatorData)
+        if (action.operatorData && typeof action.elitePhase === "number") {
+          const selectedOperator = getOperator(newState, action.operatorData);
           if (selectedOperator) {
-            selectedOperator.user.elitePhase = action.elitePhase
-            selectedOperator.user.level = 1
+            selectedOperator.user.elitePhase = action.elitePhase;
+            selectedOperator.user.level = 1;
           }
         }
-        return newState
+        return newState;
       case OwnedOperatorActionKind.LEVEL:
-        if (action.operatorData && typeof(action.level) === "number") {
-          const selectedOperator = getOperator(newState, action.operatorData)
+        if (action.operatorData && typeof action.level === "number") {
+          const selectedOperator = getOperator(newState, action.operatorData);
           if (selectedOperator) {
-            const max = action.operatorData.phases[selectedOperator.user.elitePhase].maxLevel
-            const min = 1
+            const max =
+              action.operatorData.phases[selectedOperator.user.elitePhase]
+                .maxLevel;
+            const min = 1;
             if (min <= action.level && action.level <= max) {
-              selectedOperator.user.level = action.level
+              selectedOperator.user.level = action.level;
             }
           }
         }
-        return newState
+        return newState;
       case OwnedOperatorActionKind.MODULE:
-        if (action.operatorData && typeof(action.module) === "string") {
-          const selectedOperator = getOperator(newState, action.operatorData)
+        if (action.operatorData && typeof action.module === "string") {
+          const selectedOperator = getOperator(newState, action.operatorData);
           if (selectedOperator) {
-              selectedOperator.user.module = selectedOperator.user.module ? "" : action.module
+            selectedOperator.user.module = selectedOperator.user.module
+              ? ""
+              : action.module;
           }
         }
-        return newState
+        return newState;
       case OwnedOperatorActionKind.MASTERY:
-        if (action.operatorData && typeof(action.skill) === "string" && typeof(action.mastery) === "number") {
-          const selectedOperator = getOperator(newState, action.operatorData)
+        if (
+          action.operatorData &&
+          typeof action.skill === "string" &&
+          typeof action.mastery === "number"
+        ) {
+          const selectedOperator = getOperator(newState, action.operatorData);
           if (selectedOperator) {
-            selectedOperator.user.skills[action.skill as keyof UserOperatorSkills] = action.mastery
+            selectedOperator.user.skills[
+              action.skill as keyof UserOperatorSkills
+            ] = action.mastery;
           }
         }
-        return newState
+        return newState;
       case OwnedOperatorActionKind.RESET:
         if (action.operatorData) {
-          const selectedOperator = getOperator(newState, action.operatorData)
+          const selectedOperator = getOperator(newState, action.operatorData);
           if (selectedOperator) {
-            selectedOperator.user = initialUserOperatorState
+            selectedOperator.user = initialUserOperatorState;
           }
         }
-        return newState
-     
+        return newState;
+
       default:
-        throw new Error()
+        throw new Error();
     }
-  }
-  
-  const initialOwnedOperatorsState : OperatorGridOperator[] = []
-  const [operators, dispatch] = useReducer(operatorsReducer, initialOwnedOperatorsState)
+  };
+
+  const initialOwnedOperatorsState: OperatorGridOperator[] = [];
+  const [operators, dispatch] = useReducer(
+    operatorsReducer,
+    initialOwnedOperatorsState
+  );
   const handleOwn = (operatorData: OperatorFullDetails) => {
-    dispatch({ type: OwnedOperatorActionKind.OWN, operatorData})
-  }
+    dispatch({ type: OwnedOperatorActionKind.OWN, operatorData });
+  };
 
   const handleFavourite = (operatorData: OperatorFullDetails) => {
-    dispatch({ type: OwnedOperatorActionKind.FAVOURITE, operatorData})
-  }
+    dispatch({ type: OwnedOperatorActionKind.FAVOURITE, operatorData });
+  };
 
-  const handlePotential = (operatorData: OperatorFullDetails, potential: number) => {
-    dispatch({ type: OwnedOperatorActionKind.POTENTIAL, operatorData, potential})
-  }
+  const handlePotential = (
+    operatorData: OperatorFullDetails,
+    potential: number
+  ) => {
+    dispatch({
+      type: OwnedOperatorActionKind.POTENTIAL,
+      operatorData,
+      potential,
+    });
+  };
 
-  const handleElitePhase = (operatorData: OperatorFullDetails, elitePhase: number) => {
-    dispatch({ type: OwnedOperatorActionKind.ELITE_PHASE, operatorData, elitePhase})
-  }
+  const handleElitePhase = (
+    operatorData: OperatorFullDetails,
+    elitePhase: number
+  ) => {
+    dispatch({
+      type: OwnedOperatorActionKind.ELITE_PHASE,
+      operatorData,
+      elitePhase,
+    });
+  };
 
   const handleLevel = (operatorData: OperatorFullDetails, level: number) => {
-    dispatch({ type: OwnedOperatorActionKind.LEVEL, operatorData, level})
-  }
+    dispatch({ type: OwnedOperatorActionKind.LEVEL, operatorData, level });
+  };
 
   const handleModule = (operatorData: OperatorFullDetails, module: string) => {
-    dispatch({ type: OwnedOperatorActionKind.MODULE, operatorData, module})
-  }
+    dispatch({ type: OwnedOperatorActionKind.MODULE, operatorData, module });
+  };
 
   const handleReset = (operatorData: OperatorFullDetails) => {
-    dispatch({ type: OwnedOperatorActionKind.RESET, operatorData})
-  }
+    dispatch({ type: OwnedOperatorActionKind.RESET, operatorData });
+  };
 
-  const handleMastery = (operatorData: OperatorFullDetails, skill: string, mastery : number) => {
-    dispatch({ type: OwnedOperatorActionKind.MASTERY, operatorData, skill, mastery})
-  }
+  const handleMastery = (
+    operatorData: OperatorFullDetails,
+    skill: string,
+    mastery: number
+  ) => {
+    dispatch({
+      type: OwnedOperatorActionKind.MASTERY,
+      operatorData,
+      skill,
+      mastery,
+    });
+  };
 
-  
-
-  const handleOperatorActions : OperatorAction= {handleOwn, handleFavourite, handlePotential, handleElitePhase, handleLevel, handleModule, handleReset, handleMastery}
+  const handleOperatorActions: OperatorAction = {
+    handleOwn,
+    handleFavourite,
+    handlePotential,
+    handleElitePhase,
+    handleLevel,
+    handleModule,
+    handleReset,
+    handleMastery,
+  };
 
   useEffect(() => {
-    dispatch({ type: OwnedOperatorActionKind.INIT})
+    dispatch({ type: OwnedOperatorActionKind.INIT });
     setLoading(false);
   }, [OwnedOperatorActionKind.INIT]);
 
@@ -216,14 +311,14 @@ const OperatorsGrid = () => {
 
   useEffect(() => {
     if (!loading) {
-      setExistingOwnedOperators(operators)
+      setExistingOwnedOperators(operators);
     }
   }, [operators, setExistingOwnedOperators, loading]);
 
   const handleOperatorViewClose = () => {
-    onClose()
-    setSelectedOperator("")
-  }
+    onClose();
+    setSelectedOperator("");
+  };
 
   const toggleRarity = (rarity: number) => {
     let newRarityFilter = { ...rarityFilter };
@@ -252,6 +347,21 @@ const OperatorsGrid = () => {
   useMemo(() => {
     const filters = [classFilter, rarityFilter];
     let operatorsCopy = [...operators];
+    if (searchTerm) {
+      operatorsCopy = [...operatorsCopy].filter((operator) => {
+        return operator.name.toLowerCase().includes(searchTerm.toLowerCase());
+      });
+    }
+    if (ownedFilter) {
+      operatorsCopy = [...operatorsCopy].filter((operator) => {
+        return operator.user.owned;
+      });
+    }
+    if (favouriteFilter) {
+      operatorsCopy = [...operatorsCopy].filter((operator) => {
+        return operator.user.favourite;
+      });
+    }
     filters.forEach((filter) => {
       operatorsCopy = [...operatorsCopy].filter((operator) => {
         const key = Object.keys(filter)[0];
@@ -267,12 +377,12 @@ const OperatorsGrid = () => {
           return true;
         }
       });
-      operatorsCopy.sort(
-        (operator1, operator2) => operator2.rarity - operator1.rarity
-      );
-      setDisplayedOperators(operatorsCopy);
     });
-  }, [classFilter, rarityFilter, operators]);
+    operatorsCopy.sort(
+      (operator1, operator2) => operator2.rarity - operator1.rarity
+    );
+    setDisplayedOperators(operatorsCopy);
+  }, [classFilter, rarityFilter, operators, searchTerm, ownedFilter, favouriteFilter]);
 
   return !loading ? (
     <div>
@@ -287,13 +397,44 @@ const OperatorsGrid = () => {
             rarityFilter={rarityFilter}
             toggleRarity={toggleRarity}
           />
+          <br />
+          <Center>
+            <Checkbox
+              isChecked={ownedFilter}
+              onChange={() => setOwnedFilter(!ownedFilter)}
+              paddingLeft="5px"
+            >
+              Owned operators
+            </Checkbox>
+            <Checkbox
+              isChecked={favouriteFilter}
+              onChange={() => setFavouriteFilter(!favouriteFilter)}
+              ml="20px"
+              paddingLeft="5px"
+            >
+              Favourite operators
+            </Checkbox>
+          </Center>
+          
+          <br/>
+          <Input
+            w="400px"
+            mt="5px"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            placeholder="Search for operator name"
+            size="lg"
+            fontSize="24px"
+            textAlign="center"
+            _placeholder={{ color: selectedButtonColor }}
+          />
         </Box>
       </VStack>
       <Grid templateColumns="repeat(auto-fit, 90px)" gap={1} ml={8} p={15}>
         <OperatorView
           operatorId={selectedOperator}
           operators={operators}
-          isOpen={isOpen} 
+          isOpen={isOpen}
           handleOperatorViewClose={handleOperatorViewClose}
           handleOperatorActions={handleOperatorActions}
         />
