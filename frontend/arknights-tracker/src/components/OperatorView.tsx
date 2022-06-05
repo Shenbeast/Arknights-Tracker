@@ -52,7 +52,7 @@ const OperatorView = ({
   return (
     <Modal isOpen={isOpen} onClose={handleOperatorViewClose}>
       <ModalOverlay />
-      <ModalContent mt={[0, 350]} maxW="530px">
+      <ModalContent mt={[0, 275]} maxW="530px">
         <ModalHeader>
           <Flex alignItems="center">
             <OperatorImage
