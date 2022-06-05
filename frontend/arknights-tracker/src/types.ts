@@ -1,9 +1,11 @@
 export type NullableString = string | null
 export type NullableStringArray = string[] | null
+export type NullableNumber = number | null
 
 export type RarityColor = [number, string]
 export type OperatorActionInnerOneParam = {(data : any) : void;}
 export type OperatorActionInnerTwoParam = {(data : any, data1: any) : void;}
+export type OperatorActionInnerThreeParam = {(data : any, data1: any, data2: any) : void;}
 export interface OperatorAction {
   handleOwn : OperatorActionInnerOneParam;
   handleFavourite: OperatorActionInnerOneParam;
@@ -12,12 +14,19 @@ export interface OperatorAction {
   handleLevel: OperatorActionInnerTwoParam;
   handleModule: OperatorActionInnerTwoParam;
   handleReset: OperatorActionInnerOneParam;
+  handleMastery: OperatorActionInnerThreeParam;
 }
 
 export interface GrowthMaterial {
   id: string;
   count: number;
   type: string;
+}
+
+export interface UserOperatorSkills {
+  s1: NullableNumber,
+  s2: NullableNumber,
+  s3: NullableNumber,
 }
 export interface UserOperatorGeneral {
   owned: boolean;
@@ -26,6 +35,7 @@ export interface UserOperatorGeneral {
   elitePhase: number;
   level: number;
   module: string;
+  skills: UserOperatorSkills;
 }
 
 export interface OperatorGridOperator {
@@ -193,4 +203,12 @@ export interface OperatorModuleDetails {
 
 export interface OperatorModuleDetailsList {
   [moduleId: string] : OperatorModuleDetails
+}
+
+// export interface SkillData {
+
+// }
+
+export interface SkillDataList {
+  [moduleId: string] : any
 }

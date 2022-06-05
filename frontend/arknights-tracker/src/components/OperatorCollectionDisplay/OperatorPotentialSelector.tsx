@@ -1,7 +1,9 @@
 import { HStack } from "@chakra-ui/react";
 import { OperatorAction, OperatorFullDetails, OperatorGridOperator, OperatorPotential } from "../../types";
-import OperatorPotentialImage from "./OperatorPotentialImage";
+import OperatorPotentialImage from "../images/OperatorPotentialImage";
 import styled from "styled-components";
+import BasicButton from "./BasicButton";
+import { selectedButtonColor, unselectedButtonColor } from "../../constants";
 
 interface OperatorPotentialSelectorProps {
   potentials: OperatorPotential[];
@@ -10,20 +12,11 @@ interface OperatorPotentialSelectorProps {
   currentOperator: OperatorGridOperator | undefined
 }
 
-const Wrapper = styled.button<{
-  $currentOperator: OperatorGridOperator | undefined,
-  $rank: number
-}>`
-  opacity: ${(props) =>
-    (props.$currentOperator?.user.potential === props.$rank + 1 && props.$currentOperator.user.owned)
-      ? 1.0
-      : 0.2}};
-  &:hover {
-    opacity: ${(props) => props.disabled ? 0.2 : 1.0};
-  }
-  cursor: ${(props) => props.disabled ? "not-allowed" : "pointer"};
-`;
 
+
+// (props.$currentOperator?.user.potential === props.$rank + 1 && props.$currentOperator.user.owned)
+// ? 1.0
+// : 0.2}};
 const OperatorPotentialSelector = ({
   potentials,
   handleOperatorActions,
@@ -31,15 +24,29 @@ const OperatorPotentialSelector = ({
   currentOperator
 }: OperatorPotentialSelectorProps) => {
   const operatorPotentialRanks = Object.keys(potentials).map((potential) => Number(potential));
+  const determinePotentialButtonBorder = (rank : number) => {
+    if (currentOperator?.user.potential === rank + 1 && currentOperator?.user.owned) {
+      return `1.3px solid ${selectedButtonColor}`
+    } else {
+      return `1.3px solid ${unselectedButtonColor}}`
+    }
+  }
+  const determinePotentialButtonOpacity = (rank : number) => {
+    if (currentOperator?.user.potential === rank + 1 && currentOperator?.user.owned) {
+      return 1.0
+    } else {
+      return 0.3
+    }
+  }
   return (
     <HStack>
       {operatorPotentialRanks.map((rank) => (
-        <Wrapper disabled={!currentOperator?.user.owned} key={rank} $currentOperator={currentOperator} $rank={rank} onClick={() => handleOperatorActions.handlePotential(operatorData, rank + 1)}>
+        <BasicButton border={determinePotentialButtonBorder(rank)} enabledOpacity={determinePotentialButtonOpacity(rank)} height="40px" width="50px" disabled={!currentOperator?.user.owned} key={rank} onClick={() => handleOperatorActions.handlePotential(operatorData, rank + 1)}>
           <OperatorPotentialImage
-            size="50px"
+            size="30px"
             potential={rank + 1}
           />
-        </Wrapper>
+        </BasicButton>
       ))}
     </HStack>
   );

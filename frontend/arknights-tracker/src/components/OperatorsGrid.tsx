@@ -2,8 +2,8 @@ import { char_meta } from "../assets/char_meta";
 import { char_data } from "../assets/char_data";
 import { useState, useEffect, useReducer, useMemo } from "react";
 import { Box, Grid, GridItem, useDisclosure, VStack } from "@chakra-ui/react";
-import OperatorGridImage from "./OperatorCollectionDisplay/OperatorGridImage";
-import { OperatorGridOperator, OperatorFilter, OperatorFullDetails, OperatorAction } from "../types.js";
+import OperatorGridImage from "./images/OperatorGridImage";
+import { OperatorGridOperator, OperatorFilter, OperatorFullDetails, OperatorAction, UserOperatorGeneral, UserOperatorSkills } from "../types.js";
 import OperatorView from "./OperatorView";
 import OperatorClassImageSelector from "./OperatorCollectionDisplay/OperatorClassImageSelector";
 import OperatorRaritySelector from "./OperatorCollectionDisplay/OperatorRaritySelector";
@@ -33,6 +33,7 @@ const OperatorsGrid = () => {
     INIT = "INIT",
     LEVEL = "LEVEL",
     MODULE = "MODULE",
+    MASTERY = "MASTERY",
     RESET = "RESET",
   }
   interface OwnedOperatorAction {
@@ -42,6 +43,8 @@ const OperatorsGrid = () => {
     elitePhase?: number
     level?: number
     module?: string
+    skill?: string
+    mastery?: number
   }
 
   const getOperator = (newState: OperatorGridOperator[], operatorData: OperatorFullDetails) => {
@@ -50,20 +53,20 @@ const OperatorsGrid = () => {
     )
   }
 
-  const initialUserOperatorState = {owned: false, favourite: false, potential: 1, elitePhase: 0, level: 1, module: ""}
+  const initialUserOperatorState : UserOperatorGeneral = {owned: false, favourite: false, potential: 1, elitePhase: 0, level: 1, module: "", skills: {s1: null, s2: null, s3: null}}
 
   const operatorsReducer = (state: OperatorGridOperator[], action : OwnedOperatorAction) => {
     const newState = [...state]
     switch(action.type) {
       case OwnedOperatorActionKind.INIT: 
-      console.log(existingOwnedOperators)
+      console.log("existing user operators", existingOwnedOperators)
         const operatorsArray : OperatorGridOperator[] = existingOwnedOperators.length > 0 ? existingOwnedOperators : []
         if (existingOwnedOperators.length === 0) {
           for (const operator in char_meta) {
             char_meta[operator].forEach((operatorVersion) => {
               const operator = char_data[operatorVersion];
               operatorsArray.push({
-                user: {owned: false, favourite: false, potential: 1, elitePhase: 0, level: 1, module: ""},
+                user: {owned: false, favourite: false, potential: 1, elitePhase: 0, level: 1, module: "", skills: {s1: null, s2: null, s3: null}},
                 id: operatorVersion,
                 name: cleanAlterOperatorName(operator.name),
                 rarity: operator.rarity + 1,
@@ -140,6 +143,14 @@ const OperatorsGrid = () => {
           }
         }
         return newState
+      case OwnedOperatorActionKind.MASTERY:
+        if (action.operatorData && typeof(action.skill) === "string" && typeof(action.mastery) === "number") {
+          const selectedOperator = getOperator(newState, action.operatorData)
+          if (selectedOperator) {
+            selectedOperator.user.skills[action.skill as keyof UserOperatorSkills] = action.mastery
+          }
+        }
+        return newState
       case OwnedOperatorActionKind.RESET:
         if (action.operatorData) {
           const selectedOperator = getOperator(newState, action.operatorData)
@@ -156,7 +167,6 @@ const OperatorsGrid = () => {
   
   const initialOwnedOperatorsState : OperatorGridOperator[] = []
   const [operators, dispatch] = useReducer(operatorsReducer, initialOwnedOperatorsState)
-  console.log("operators", operators)
   const handleOwn = (operatorData: OperatorFullDetails) => {
     dispatch({ type: OwnedOperatorActionKind.OWN, operatorData})
   }
@@ -185,9 +195,13 @@ const OperatorsGrid = () => {
     dispatch({ type: OwnedOperatorActionKind.RESET, operatorData})
   }
 
+  const handleMastery = (operatorData: OperatorFullDetails, skill: string, mastery : number) => {
+    dispatch({ type: OwnedOperatorActionKind.MASTERY, operatorData, skill, mastery})
+  }
+
   
 
-  const handleOperatorActions : OperatorAction= {handleOwn, handleFavourite, handlePotential, handleElitePhase, handleLevel, handleModule, handleReset}
+  const handleOperatorActions : OperatorAction= {handleOwn, handleFavourite, handlePotential, handleElitePhase, handleLevel, handleModule, handleReset, handleMastery}
 
   useEffect(() => {
     dispatch({ type: OwnedOperatorActionKind.INIT})

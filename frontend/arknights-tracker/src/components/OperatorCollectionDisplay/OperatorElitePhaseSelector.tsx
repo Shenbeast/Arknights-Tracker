@@ -1,37 +1,9 @@
 import { HStack } from "@chakra-ui/react";
-import { ElitePhases, unselectedButtonColor, selectedButtonColor, unselectedButtonBackgroundColor, hoveredButtonColor } from "../../constants";
+import { ElitePhases, unselectedButtonColor, selectedButtonColor} from "../../constants";
 import { OperatorAction, OperatorFullDetails, OperatorGridOperator } from "../../types";
-import OperatorElitePhaseImage from "./OperatorElitePhaseImage";
-import styled from "styled-components";
+import OperatorElitePhaseImage from "../images/OperatorElitePhaseImage";
+import BasicButton from "./BasicButton";
 
-const borderRadius = "25%"
-const Wrapper = styled.button<{
-  $currentOperator: OperatorGridOperator | undefined,
-  $elitePhase: number
-}>`
-  border: ${(props) =>
-    (props.$currentOperator?.user.elitePhase === props.$elitePhase && props.$currentOperator.user.owned)
-      ? `1.3px solid ${selectedButtonColor}`
-      : `1.3px solid ${unselectedButtonColor}`};
-  border-radius: ${borderRadius};
-  background-color: ${unselectedButtonBackgroundColor};
-  padding: 8px;
-  opacity: ${(props) =>
-    (props.$currentOperator?.user.elitePhase === props.$elitePhase && props.$currentOperator.user.owned)
-      ? 1.0
-      : 0.35}};
-  &:hover {
-    cursor: ${(props) =>
-      props.disabled
-        ? "not-allowed"
-        :"pointer"};
-    background-color: ${(props) => props.disabled ? unselectedButtonBackgroundColor : hoveredButtonColor};
-    opacity:  ${(props) =>
-      props.disabled
-        ? 0.35
-        :1};
-  }
-`
 
 interface OperatorElitePhaseImageProps {
   handleOperatorActions: OperatorAction;
@@ -41,8 +13,22 @@ interface OperatorElitePhaseImageProps {
 
 const OperatorElitePhaseSelector = ({handleOperatorActions, operatorData, currentOperator} : OperatorElitePhaseImageProps) => {
   const elitePhases = operatorData.phases.map((elitePhase, index) => index)
+  const determineElitePhaseButtonBorder = (elitePhase : number) => {
+    if (currentOperator?.user.elitePhase === elitePhase && currentOperator?.user.owned) {
+      return `1.3px solid ${selectedButtonColor}`
+    } else {
+      return `1.3px solid ${unselectedButtonColor}}`
+    }
+  }
+  const determineElitePhaseButtonOpacity = (elitePhase : number) => {
+    if (currentOperator?.user.elitePhase === elitePhase && currentOperator?.user.owned) {
+      return 1.0
+    } else {
+      return 0.3
+    }
+  }
   return <HStack>
-    {ElitePhases.map((elitePhase) => <Wrapper $currentOperator = {currentOperator} disabled={!elitePhases.includes(elitePhase) || !currentOperator?.user.owned} $elitePhase={elitePhase} key={elitePhase} onClick={() => handleOperatorActions.handleElitePhase(operatorData, elitePhase)}><OperatorElitePhaseImage elitePhase={elitePhase} size="35px"/></Wrapper>)}
+    {ElitePhases.map((elitePhase) => <BasicButton height="52px" width="52px" border={determineElitePhaseButtonBorder(elitePhase)} enabledOpacity={determineElitePhaseButtonOpacity(elitePhase)} disabled={!elitePhases.includes(elitePhase) || !currentOperator?.user.owned} key={elitePhase} onClick={() => handleOperatorActions.handleElitePhase(operatorData, elitePhase)}><OperatorElitePhaseImage elitePhase={elitePhase} size="35px"/></BasicButton>)}
   </HStack>
 };
 

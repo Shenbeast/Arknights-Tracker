@@ -1,6 +1,6 @@
 import { Center, HStack } from "@chakra-ui/react";
 import { ClassNameMappings, SelectedFilterColor } from "../../constants";
-import OperatorClassImage from "./OperatorClassImage";
+import OperatorClassImage from "../images/OperatorClassImage";
 import styled from "styled-components";
 import { OperatorFilter } from "../../types";
 

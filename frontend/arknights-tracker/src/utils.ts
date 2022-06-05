@@ -15,7 +15,7 @@ export const handleRarityBorderColor = (rarity : number) => {
 
 export const cleanAlterOperatorName = (name : string) => {
   const splitName = name.split(' ')
-  if (splitName.length > 1) {
+  if (splitName.length > 2) {
     return `${splitName[0]} Alter`
   } else {
     return name

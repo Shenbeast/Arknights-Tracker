@@ -22,10 +22,11 @@ import {
 } from "../types";
 import OperatorElitePhaseSelector from "./OperatorCollectionDisplay/OperatorElitePhaseSelector";
 import OperatorGeneralSelector from "./OperatorCollectionDisplay/OperatorGeneralSelector";
-import OperatorImage from "./OperatorCollectionDisplay/OperatorImage";
+import OperatorImage from "./images/OperatorImage";
 import OperatorLevelSelector from "./OperatorCollectionDisplay/OperatorLevelSelector";
 import OperatorModuleSelector from "./OperatorCollectionDisplay/OperatorModuleSelector";
 import OperatorPotentialSelector from "./OperatorCollectionDisplay/OperatorPotentialSelector";
+import OperatorMasterySelector from "./OperatorCollectionDisplay/OperatorMasterySelector";
 
 interface OperatorViewProps {
   operatorId: string;
@@ -51,7 +52,7 @@ const OperatorView = ({
   return (
     <Modal isOpen={isOpen} onClose={handleOperatorViewClose}>
       <ModalOverlay />
-      <ModalContent mt={[0, 350]} maxW="500px">
+      <ModalContent mt={[0, 350]} maxW="530px">
         <ModalHeader>
           <Flex alignItems="center">
             <OperatorImage
@@ -59,10 +60,7 @@ const OperatorView = ({
               id={operatorId}
               name={operatorData?.name}
             />
-            <Text
-              fontSize={operatorData?.name.length < 12 ? "5xl" : "3xl"}
-              ml="3.5"
-            >
+            <Text fontSize="3xl" ml="3.5">
               {operatorData?.name}
             </Text>
           </Flex>
@@ -79,7 +77,11 @@ const OperatorView = ({
                     handleOperatorActions={handleOperatorActions}
                   />
                 </Box>
-                <Divider mt="8px !important" borderLeftWidth="4px !important" orientation="vertical"/>
+                <Divider
+                  mt="8px !important"
+                  borderLeftWidth="4px !important"
+                  orientation="vertical"
+                />
                 <Box className="potential">
                   <OperatorPotentialSelector
                     currentOperator={currentOperator}
@@ -89,7 +91,10 @@ const OperatorView = ({
                   />
                 </Box>
               </HStack>
-              <Divider mt="12px !important" borderBottomWidth="4px !important" />
+              <Divider
+                mt="12px !important"
+                borderBottomWidth="4px !important"
+              />
               <HStack spacing="24px">
                 <VStack spacing="25px">
                   <Box className="elitePhase">
@@ -107,7 +112,11 @@ const OperatorView = ({
                     />
                   </Box>
                 </VStack>
-                <Divider mt="-2px !important" borderLeftWidth="4px !important" orientation="vertical"/>
+                <Divider
+                  mt="-2px !important"
+                  borderLeftWidth="4px !important"
+                  orientation="vertical"
+                />
                 <Box className="levelSelector">
                   <OperatorLevelSelector
                     currentOperator={currentOperator}
@@ -116,7 +125,14 @@ const OperatorView = ({
                   />
                 </Box>
               </HStack>
-              <Divider mt="8px !important" borderBottomWidth="4px !important"/>
+              <Divider mt="8px !important" borderBottomWidth="4px !important" />
+              <HStack>
+                <OperatorMasterySelector
+                  currentOperator={currentOperator}
+                  operatorData={operatorData}
+                  handleOperatorActions={handleOperatorActions}
+                />
+              </HStack>
             </VStack>
           </Flex>
           <Button

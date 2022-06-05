@@ -7,7 +7,7 @@ import {
 } from "../../types";
 import { selectedButtonColor, unselectedButtonColor } from "../../constants";
 import { modules_data } from "../../assets/modules_data";
-import OperatorModuleImage from "./OperatorModuleImage";
+import OperatorModuleImage from "../images/OperatorModuleImage";
 
 interface OperatorModuleSelectorProps {
   handleOperatorActions: OperatorAction;
