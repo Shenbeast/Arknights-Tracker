@@ -15,7 +15,7 @@ const Wrapper = styled(Box)`
 const OperatorRarityCard = ({ rarity }: OperatorRarityCardProps) => {
   return (
     <Wrapper rarity={rarity}>
-      {rarity} <StarIcon />
+      {rarity} <StarIcon mt="-7px"/>
     </Wrapper>
   );
 };

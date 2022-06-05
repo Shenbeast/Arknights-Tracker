@@ -1,4 +1,4 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Center, HStack } from "@chakra-ui/react";
 import { ClassNameMappings, SelectedFilterColor } from "../../constants";
 import OperatorClassImage from "./OperatorClassImage";
 import styled from "styled-components";
@@ -11,7 +11,7 @@ interface OperatorClassImageSelectorProps {
 
 const borderRadius = "15%";
 
-const Wrapper = styled(Box)<{ $toggled: boolean }>`
+const Wrapper = styled(Center)<{ $toggled: boolean }>`
   opacity: ${(props) => (props.$toggled ? 1.0 : 0.8)};
   border: ${(props) =>
     props.$toggled
@@ -36,7 +36,7 @@ const OperatorClassImageSelector = ({
     }
   };
   return (
-    <Flex justifyContent="space-evenly">
+    <HStack>
       {Object.keys(ClassNameMappings).map((key) => (
         <Wrapper
           key={key}
@@ -52,7 +52,7 @@ const OperatorClassImageSelector = ({
           />
         </Wrapper>
       ))}
-    </Flex>
+    </HStack>
   );
 };
 

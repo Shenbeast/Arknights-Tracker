@@ -8,8 +8,10 @@ export interface OperatorAction {
   handleOwn : OperatorActionInnerOneParam;
   handleFavourite: OperatorActionInnerOneParam;
   handlePotential: OperatorActionInnerTwoParam;
-  handleReset: OperatorActionInnerOneParam;
   handleElitePhase: OperatorActionInnerTwoParam;
+  handleLevel: OperatorActionInnerTwoParam;
+  handleModule: OperatorActionInnerTwoParam;
+  handleReset: OperatorActionInnerOneParam;
 }
 
 export interface GrowthMaterial {
@@ -23,6 +25,7 @@ export interface UserOperatorGeneral {
   potential: number;
   elitePhase: number;
   level: number;
+  module: string;
 }
 
 export interface OperatorGridOperator {
@@ -182,4 +185,12 @@ export interface OperatorPotential {
 export interface OperatorNonMasterySkillUpgradeCost {
   unlockCond: OperatorSkillUpgradeUnlockCondition,
   lvlUpCost: GrowthMaterial[] | null,
+}
+
+export interface OperatorModuleDetails {
+  phases: any[]
+}
+
+export interface OperatorModuleDetailsList {
+  [moduleId: string] : OperatorModuleDetails
 }

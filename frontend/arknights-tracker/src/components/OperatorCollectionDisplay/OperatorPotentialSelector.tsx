@@ -19,9 +19,9 @@ const Wrapper = styled.button<{
       ? 1.0
       : 0.2}};
   &:hover {
-    opacity: 1;
+    opacity: ${(props) => props.disabled ? 0.2 : 1.0};
   }
-  cursor: pointer;
+  cursor: ${(props) => props.disabled ? "not-allowed" : "pointer"};
 `;
 
 const OperatorPotentialSelector = ({
@@ -34,7 +34,7 @@ const OperatorPotentialSelector = ({
   return (
     <HStack>
       {operatorPotentialRanks.map((rank) => (
-        <Wrapper key={rank} $currentOperator={currentOperator} $rank={rank} onClick={() => handleOperatorActions.handlePotential(operatorData, rank + 1)}>
+        <Wrapper disabled={!currentOperator?.user.owned} key={rank} $currentOperator={currentOperator} $rank={rank} onClick={() => handleOperatorActions.handlePotential(operatorData, rank + 1)}>
           <OperatorPotentialImage
             size="50px"
             potential={rank + 1}

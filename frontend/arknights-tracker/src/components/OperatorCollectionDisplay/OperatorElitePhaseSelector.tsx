@@ -23,10 +23,13 @@ const Wrapper = styled.button<{
   &:hover {
     cursor: ${(props) =>
       props.disabled
-        ? "default"
+        ? "not-allowed"
         :"pointer"};
-      background-color: ${hoveredButtonColor};
-      opacity: 1.0;
+    background-color: ${(props) => props.disabled ? unselectedButtonBackgroundColor : hoveredButtonColor};
+    opacity:  ${(props) =>
+      props.disabled
+        ? 0.35
+        :1};
   }
 `
 
@@ -39,7 +42,7 @@ interface OperatorElitePhaseImageProps {
 const OperatorElitePhaseSelector = ({handleOperatorActions, operatorData, currentOperator} : OperatorElitePhaseImageProps) => {
   const elitePhases = operatorData.phases.map((elitePhase, index) => index)
   return <HStack>
-    {ElitePhases.map((elitePhase) => <Wrapper $currentOperator = {currentOperator} disabled={!elitePhases.includes(elitePhase)} $elitePhase={elitePhase} key={elitePhase} onClick={() => handleOperatorActions.handleElitePhase(operatorData, elitePhase)}><OperatorElitePhaseImage elitePhase={elitePhase} size="35px"/></Wrapper>)}
+    {ElitePhases.map((elitePhase) => <Wrapper $currentOperator = {currentOperator} disabled={!elitePhases.includes(elitePhase) || !currentOperator?.user.owned} $elitePhase={elitePhase} key={elitePhase} onClick={() => handleOperatorActions.handleElitePhase(operatorData, elitePhase)}><OperatorElitePhaseImage elitePhase={elitePhase} size="35px"/></Wrapper>)}
   </HStack>
 };
 

@@ -7,6 +7,7 @@ interface BasicButtonProps {
   width: string;
   onClick: any;
   children: any;
+  disabled?: boolean;
 }
 
 const Wrapper = styled.button<{$border: string, $width: string, $height: string}> `
@@ -15,15 +16,17 @@ const Wrapper = styled.button<{$border: string, $width: string, $height: string}
   border-radius: 15%;
   padding: 5px;
   &:hover {
-    background-color: ${hoveredButtonColor};
+    background-color: ${props => props.disabled ? unselectedButtonBackgroundColor : hoveredButtonColor};
   }
   height: ${props => props.$height};
   width: ${props => props.$width};
+  cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
+  opacity: ${props => props.disabled ? 0.3 : 1};
 `
 
-const BasicButton = ({border, height, width, onClick, children}: BasicButtonProps) => {
+const BasicButton = ({border, height, width, onClick, disabled, children}: BasicButtonProps) => {
   return (
-    <Wrapper $border={border} $height={height} $width={width} onClick={onClick}>
+    <Wrapper $border={border} $height={height} $width={width} disabled={disabled} onClick={onClick}>
       <Center>
         {children}
       </Center>

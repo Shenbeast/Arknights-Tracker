@@ -12,12 +12,19 @@ import {
   Text,
   HStack,
   VStack,
+  Divider,
 } from "@chakra-ui/react";
 import { char_data } from "../assets/char_data";
-import { OperatorAction, OperatorFullDetails, OperatorGridOperator } from "../types";
+import {
+  OperatorAction,
+  OperatorFullDetails,
+  OperatorGridOperator,
+} from "../types";
 import OperatorElitePhaseSelector from "./OperatorCollectionDisplay/OperatorElitePhaseSelector";
 import OperatorGeneralSelector from "./OperatorCollectionDisplay/OperatorGeneralSelector";
 import OperatorImage from "./OperatorCollectionDisplay/OperatorImage";
+import OperatorLevelSelector from "./OperatorCollectionDisplay/OperatorLevelSelector";
+import OperatorModuleSelector from "./OperatorCollectionDisplay/OperatorModuleSelector";
 import OperatorPotentialSelector from "./OperatorCollectionDisplay/OperatorPotentialSelector";
 
 interface OperatorViewProps {
@@ -34,16 +41,17 @@ const OperatorView = ({
   handleOperatorViewClose,
   handleOperatorActions,
 }: OperatorViewProps) => {
-  const operatorData : OperatorFullDetails = char_data[operatorId];
+  const operatorData: OperatorFullDetails = char_data[operatorId];
   if (operatorData) {
-    operatorData.id = operatorId
+    operatorData.id = operatorId;
   }
-  const currentOperator = operators.find((operator) => operator.id === operatorId)
-  console.log("available handlers", handleOperatorActions)
+  const currentOperator = operators.find(
+    (operator) => operator.id === operatorId
+  );
   return (
     <Modal isOpen={isOpen} onClose={handleOperatorViewClose}>
       <ModalOverlay />
-      <ModalContent mt={[0, 350]} maxW="460px">
+      <ModalContent mt={[0, 350]} maxW="500px">
         <ModalHeader>
           <Flex alignItems="center">
             <OperatorImage
@@ -62,28 +70,59 @@ const OperatorView = ({
         <ModalCloseButton />
         <ModalBody>
           <Flex className="ownedOperatorDetails">
-            <VStack>
-            <HStack spacing="24px">
-              <Box className="general">
-                <OperatorGeneralSelector currentOperator = {currentOperator} operatorData = {operatorData} handleOperatorActions={handleOperatorActions}/>
-              </Box>
-              <Box className="potential">
-                <OperatorPotentialSelector
-                  currentOperator = {currentOperator}
-                  potentials={operatorData?.potentialRanks}
-                  operatorData = {operatorData}
-                  handleOperatorActions={handleOperatorActions}
-                />
-              </Box>
-            </HStack>
-            <HStack spacing="24px">
-              <Box className="elitePhase">
-                <OperatorElitePhaseSelector currentOperator = {currentOperator} operatorData = {operatorData} handleOperatorActions={handleOperatorActions}/>
-              </Box>
-            </HStack>
+            <VStack spacing="14px">
+              <HStack spacing="24px">
+                <Box className="general">
+                  <OperatorGeneralSelector
+                    currentOperator={currentOperator}
+                    operatorData={operatorData}
+                    handleOperatorActions={handleOperatorActions}
+                  />
+                </Box>
+                <Divider mt="8px !important" borderLeftWidth="4px !important" orientation="vertical"/>
+                <Box className="potential">
+                  <OperatorPotentialSelector
+                    currentOperator={currentOperator}
+                    potentials={operatorData?.potentialRanks}
+                    operatorData={operatorData}
+                    handleOperatorActions={handleOperatorActions}
+                  />
+                </Box>
+              </HStack>
+              <Divider mt="12px !important" borderBottomWidth="4px !important" />
+              <HStack spacing="24px">
+                <VStack spacing="25px">
+                  <Box className="elitePhase">
+                    <OperatorElitePhaseSelector
+                      currentOperator={currentOperator}
+                      operatorData={operatorData}
+                      handleOperatorActions={handleOperatorActions}
+                    />
+                  </Box>
+                  <Box className="module">
+                    <OperatorModuleSelector
+                      currentOperator={currentOperator}
+                      operatorData={operatorData}
+                      handleOperatorActions={handleOperatorActions}
+                    />
+                  </Box>
+                </VStack>
+                <Divider mt="-2px !important" borderLeftWidth="4px !important" orientation="vertical"/>
+                <Box className="levelSelector">
+                  <OperatorLevelSelector
+                    currentOperator={currentOperator}
+                    operatorData={operatorData}
+                    handleOperatorActions={handleOperatorActions}
+                  />
+                </Box>
+              </HStack>
+              <Divider mt="8px !important" borderBottomWidth="4px !important"/>
             </VStack>
           </Flex>
-          <Button mt="60px" onClick={() => handleOperatorActions.handleReset(operatorData)}>
+          <Button
+            mt="60px"
+            onClick={() => handleOperatorActions.handleReset(operatorData)}
+          >
             Reset Operator
           </Button>
         </ModalBody>

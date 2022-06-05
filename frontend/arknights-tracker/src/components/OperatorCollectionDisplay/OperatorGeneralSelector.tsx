@@ -15,8 +15,8 @@ const OperatorGeneralSelector = ({currentOperator, handleOperatorActions, operat
   const determineFavouriteButtonBorder = currentOperator?.user.favourite ? `1.3px solid ${selectedButtonColor}` : `1.3px solid ${unselectedButtonColor}`
   return (
     <HStack>
-      <BasicButton border={determineOwnButtonBorder} height="40px" width="60px" onClick={() => handleOperatorActions.handleOwn(operatorData)}>Own</BasicButton>
-      <BasicButton border={determineFavouriteButtonBorder} height="40px" width="60px" onClick={() => handleOperatorActions.handleFavourite(operatorData)} aria-label="Favourite"><FaHeart color={currentOperator?.user.favourite ? "red" : "white"}/></BasicButton>
+      <BasicButton border={determineOwnButtonBorder} height="40px" width="70px" onClick={() => handleOperatorActions.handleOwn(operatorData)}>Own</BasicButton>
+      <BasicButton border={determineFavouriteButtonBorder} height="40px" width="70px" onClick={() => handleOperatorActions.handleFavourite(operatorData)} aria-label="Favourite"><FaHeart color={currentOperator?.user.favourite ? "red" : "white"}/></BasicButton>
     </HStack>
   );
 };

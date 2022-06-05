@@ -1,11 +1,11 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Center, HStack } from "@chakra-ui/react";
 import { OperatorFilter } from "../../types";
 import OperatorRarityCard from "./OperatorRarityCard";
 import styled from "styled-components";
 import { SelectedFilterColor } from "../../constants";
 
 const borderRadius = "15%";
-const Wrapper = styled(Box)`
+const Wrapper = styled(Center)`
   opacity: ${(props) => (props.$toggled ? 1.0 : 0.8)};
   border: ${(props) =>
     props.$toggled
@@ -36,7 +36,7 @@ const OperatorRaritySelector = ({
   };
 
   return (
-    <Flex justifyContent={"space-evenly"}>
+    <HStack justifyContent="center">
       {rarities.map((rarity) => (
         <Wrapper
           key={rarity}
@@ -49,7 +49,7 @@ const OperatorRaritySelector = ({
           <OperatorRarityCard rarity={rarity} />
         </Wrapper>
       ))}
-    </Flex>
+    </HStack>
   );
 };
 
