@@ -90,7 +90,7 @@ const OperatorMasterySelector = ({
                   skill,
                   masteryLevel
                 )}
-                disabled={!getSkillId(index) || !currentOperator?.user.owned}
+                disabled={!getSkillId(index) || !currentOperator?.user.owned || currentOperator?.user.elitePhase < 2}
                 onClick={() => handleOperatorActions.handleMastery(operatorData, skill, masteryLevel)}
               >
                 <OperatorMasteryImage mastery={masteryLevel} size="36px" />

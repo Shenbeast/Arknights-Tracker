@@ -172,6 +172,9 @@ const OperatorsGrid = () => {
           if (selectedOperator) {
             selectedOperator.user.elitePhase = action.elitePhase;
             selectedOperator.user.level = 1;
+            if (action.elitePhase !== 2) {
+              selectedOperator.user.skills = {s1: null, s2: null, s3: null}
+            }
           }
         }
         return newState;
