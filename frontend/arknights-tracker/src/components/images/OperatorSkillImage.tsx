@@ -12,7 +12,7 @@ const OperatorSkillImage = ({
   size,
   borderRadius,
 }: OperatorSkillImageProps) => {
-  const baseUrl = "https://aceship.github.io/AN-EN-Tags/img/skills/skill_icon_";
+  const baseUrl = "https://raw.githubusercontent.com/Aceship/Arknight-Images/main/skills/skill_icon_";
   const srcUrl = `${baseUrl}${skillId}.png`;
   return (
     skillId ? 

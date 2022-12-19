@@ -1,5 +1,6 @@
 import { char_meta } from "../assets/char_meta";
 import { char_data } from "../assets/char_data";
+import { modules_data } from "../assets/modules_data";
 import { useState, useEffect, useReducer, useMemo } from "react";
 import {
   Box,
@@ -99,34 +100,56 @@ const OperatorsGrid = () => {
     switch (action.type) {
       case OwnedOperatorActionKind.INIT:
         //console.log("existing user operators", existingOwnedOperators);
+        const temp : any[] = []
         const operatorsArray: OperatorGridOperator[] =
           existingOwnedOperators.length > 0 ? existingOwnedOperators : [];
         if (existingOwnedOperators.length === 0) {
           for (const operator in char_meta) {
             char_meta[operator].forEach((operatorVersion) => {
+              const baseModuleKey = "uniequip_002_";
+              const operatorIdName = operatorVersion.split("_").slice(-1)[0];
+              const moduleKey = `${baseModuleKey}${operatorIdName}`;
+              const module = modules_data[moduleKey];
               const operator = char_data[operatorVersion];
-              operatorsArray.push({
-                user: {
-                  owned: false,
-                  favourite: false,
-                  potential: 1,
-                  elitePhase: 0,
-                  level: 1,
-                  module: "",
-                  skills: { s1: null, s2: null, s3: null },
-                },
-                id: operatorVersion,
-                name: cleanAlterOperatorName(operator.name),
-                rarity: operator.rarity + 1,
-                class: operator.profession,
-                skills: operator.skills,
-                potential: operator.potentialRanks,
-                phases: operator.phases,
-              });
+              if (operator.skills.length !== 0) {
+                temp.push({
+                  id: operatorVersion,
+                  name: cleanAlterOperatorName(operator.name),
+                  position: operator.position,
+                  tags: operator.tagList,
+                  rarity: operator.rarity + 1,
+                  group: operator.groupId,
+                  class: operator.profession,
+                  subclass: operator.subProfessionId,
+                  skills: operator.skills,
+                  module: module !== undefined,
+                  nation: operator.nationId
+                })
+                operatorsArray.push({
+                  user: {
+                    owned: false,
+                    favourite: false,
+                    potential: 1,
+                    elitePhase: 0,
+                    level: 1,
+                    module: "",
+                    skills: { s1: null, s2: null, s3: null },
+                  },
+                  id: operatorVersion,
+                  name: cleanAlterOperatorName(operator.name),
+                  rarity: operator.rarity + 1,
+                  class: operator.profession,
+                  skills: operator.skills,
+                  potential: operator.potentialRanks,
+                  phases: operator.phases,
+                });
+              }
+              
             });
           }
         }
         //console.log("initialised");
+        //console.log(operatorsArray.length)
         return operatorsArray;
       case OwnedOperatorActionKind.OWN:
         if (action.operatorData) {
@@ -388,7 +411,7 @@ const OperatorsGrid = () => {
   }, [classFilter, rarityFilter, operators, searchTerm, ownedFilter, favouriteFilter]);
 
   return !loading ? (
-    <div>
+    <Box>
       <VStack>
         <Box mb="10">
           <OperatorClassImageSelector
@@ -433,7 +456,7 @@ const OperatorsGrid = () => {
           />
         </Box>
       </VStack>
-      <Grid templateColumns="repeat(auto-fit, 90px)" gap={1} ml={8} p={15}>
+      <Grid templateColumns="repeat(auto-fit, 90px)" gap={1} ml={20} p={27}>
         <OperatorView
           operatorId={selectedOperator}
           operators={operators}
@@ -454,7 +477,7 @@ const OperatorsGrid = () => {
           </GridItem>
         ))}
       </Grid>
-    </div>
+    </Box>
   ) : null;
 };
 

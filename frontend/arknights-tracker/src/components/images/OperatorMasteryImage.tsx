@@ -11,7 +11,7 @@ const OperatorMasteryImage = ({
   size,
   borderRadius,
 }: OperatorMasteryImageProps) => {
-  const baseUrl = "https://aceship.github.io/AN-EN-Tags/img/ui/rank/m-";
+  const baseUrl = "https://raw.githubusercontent.com/Aceship/Arknight-Images/main/ui/rank/m-";
   const srcUrl = `${baseUrl}${mastery}.png`;
   return (
     <Image

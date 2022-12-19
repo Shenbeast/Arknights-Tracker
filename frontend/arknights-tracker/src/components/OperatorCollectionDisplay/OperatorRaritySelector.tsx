@@ -13,7 +13,7 @@ const Wrapper = styled(Center)`
       : "1.3px solid transparent"};
   border-radius: ${borderRadius};
   box-shadow: ${(props) =>
-    props.$toggled ? `0px 0px 0px 1.3px ${SelectedFilterColor} inset` : null};
+    props.$toggled ? `0px 0px 0px 1.3px ${SelectedFilterColor} inset` : `0px 0px 0px 1.3px transparent inset`};
   &:hover {
     border: ${(props) => (!props.$toggled ? `1.3px solid red` : null)};
     opacity: 1;

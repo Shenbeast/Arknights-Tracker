@@ -11,7 +11,7 @@ const OperatorPotentialImage = ({
   size,
   borderRadius,
 }: OperatorPotentialImageProps) => {
-  const baseUrl = "https://aceship.github.io/AN-EN-Tags/img/ui/potential";
+  const baseUrl = "https://raw.githubusercontent.com/Aceship/Arknight-Images/main/ui/potential";
   const srcUrl = `${baseUrl}/${potential}.png`;
   return (
     <Image

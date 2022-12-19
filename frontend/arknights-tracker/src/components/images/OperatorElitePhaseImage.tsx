@@ -11,7 +11,7 @@ const OperatorElitePhaseImage = ({
   size,
   borderRadius,
 }: OperatorElitePhaseProps) => {
-  const baseUrl = "https://aceship.github.io/AN-EN-Tags/img/ui/elite/";
+  const baseUrl = "https://raw.githubusercontent.com/Aceship/Arknight-Images/main/ui/elite/";
   const srcUrl = `${baseUrl}/${elitePhase}.png`;
   return (
     <Image

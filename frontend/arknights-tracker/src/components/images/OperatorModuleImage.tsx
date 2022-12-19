@@ -14,7 +14,7 @@ const OperatorModuleImage = ({
   size,
   borderRadius,
 }: OperatorModuleImageProps) => {
-  const baseUrl = "https://aceship.github.io/AN-EN-Tags/img/equip/icon";
+  const baseUrl = "https://raw.githubusercontent.com/Aceship/Arknight-Images/main/equip/icon";
   const srcUrl = `${baseUrl}/${module}.png`;
   return (
     module ? 

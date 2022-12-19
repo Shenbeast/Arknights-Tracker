@@ -12,7 +12,7 @@ const OperatorClassImage = ({
   size,
   borderRadius,
 }: OperatorClassImageProps) => {
-  const baseUrl = "https://aceship.github.io/AN-EN-Tags/img/classes/black";
+  const baseUrl = "https://raw.githubusercontent.com/Aceship/Arknight-Images/main/classes/black";
   const formattedClassName = ClassNameMappings[className];
   const srcUrl = `${baseUrl}/icon_profession_${formattedClassName.toLowerCase()}_large.png`;
   return (

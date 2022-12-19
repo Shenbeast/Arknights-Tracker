@@ -7,7 +7,7 @@ interface OperatorImageProps {
 }
 
 const OperatorImage = ({ id, name, size }: OperatorImageProps) => {
-  const baseUrl = " https://aceship.github.io/AN-EN-Tags/img/avatars";
+  const baseUrl = "https://raw.githubusercontent.com/Aceship/Arknight-Images/main/avatars";
   const srcUrl = `${baseUrl}/${id}.png`;
   return <Image boxSize={size} src={srcUrl} alt={name} />;
 };
