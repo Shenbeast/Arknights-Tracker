@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { OperatorGridOperator } from "../../types";
 import styled from "styled-components";
 import OperatorImage from "./OperatorImage";
@@ -36,7 +36,12 @@ const OperatorGridImage = ({
     >
       <OperatorImage size="90" id={operator.id} name={operator.name} />
       {operator.user.favourite && <FaHeart color="red" style={{marginTop: "-80px"}}/>}
-      <div style={{marginTop: operator.user.favourite ? "60px" : "0px"}}>{operator.name}</div>
+      <Text
+        fontSize={operator.name.length > 8 ? "md" : "xl"}
+        style={{ marginTop: operator.user.favourite ? "60px" : "0px" }}
+      >
+        {operator.name}
+      </Text>
     </Wrapper>
   );
 };

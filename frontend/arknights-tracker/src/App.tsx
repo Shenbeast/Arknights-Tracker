@@ -1,16 +1,22 @@
 import {
   ChakraProvider,
   Box,
-  theme,
+  extendTheme
 } from '@chakra-ui/react';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import OperatorsGrid from './components/OperatorsGrid';
 
+const theme = extendTheme({
+  config: {
+    useSystemColorMode: false,
+    initialColorMode: "dark",
+  },
+});
+
 export const App = () => {
   return (
     <ChakraProvider theme={theme} >
-      <ColorModeSwitcher justifySelf="flex-end" />
-      <Box textAlign="center" fontSize="xl" style={{cursor: 'url(cursor.cur), auto'}}>
+      <Box marginTop="14" textAlign="center" fontSize="xl" style={{cursor: 'url(cursor.cur), auto'}}>
         <OperatorsGrid/>
       </Box>
     </ChakraProvider>
