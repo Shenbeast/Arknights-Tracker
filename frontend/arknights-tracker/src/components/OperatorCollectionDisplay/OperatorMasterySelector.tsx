@@ -69,7 +69,7 @@ const OperatorMasterySelector = ({
               label={
                 getSkillId(index)
                   ? skill_data[getSkillId(index) as keyof SkillDataList]
-                      .levels[0].description
+                      .levels[0].name
                   : "No skill"
               }
             >
